@@ -3,15 +3,20 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const { Client } = require("pg");
 const fs = require("fs");
+// imports
+// ...
+require('dotenv').config()
 
 // declarations
+const scriptSql = fs.readFileSync('./sql/script.sql').toString();
+client.query(scriptSql);
 const app = express();
 const port = 8000;
 const client = new Client({
-    user: "postgres",
-    host: "localhost",
-    database: "ticket",
-    password: "Merde2021!",
+    user: "process.env.DB_USERNAME",
+    host: "process.env.DB_HOST",
+    database: "process.env.DB_NAME",
+    password: "process.env.DB_PASSWORD",
     port: 5432,
 });
 
