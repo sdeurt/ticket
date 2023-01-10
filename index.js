@@ -2,16 +2,17 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const { Client } = require("pg");
-const fs = require("fs");
+require('dotenv').config();
 
 // declarations
+
 const app = express();
 const port = 8000;
 const client = new Client({
-    user: "postgres",
-    host: "localhost",
-    database: "ticket",
-    password: "Merde2021!",
+    user: process.env.DB_USERNAME,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME, 
+    password: process.env.DB_PASSWORD,
     port: 5432,
 });
 
@@ -131,7 +132,6 @@ app.post("/api/ticket", async (req, res) => {
 
         const data = await client.query(
             "INSERT INTO ticket (message) VALUES ($1) RETURNING *", [message]
-           
         );
 
         res.status(201).json({
@@ -158,8 +158,8 @@ app.delete("/api/ticket/:id", async (req, res) => {
     const id = req.params.id;
 
     const data = await client.query(
-        "DELETE FROM ticket WHERE id = $1 RETURNING *",
-        [id]
+        "DELETE FROM ticket WHERE id = $1 RETURNING *", [id]
+        
     );
     console.log(data);
     if (data.rowCount === 1) {
@@ -186,7 +186,7 @@ app.put("/api/ticket", async (req, res) => {
     const message = req.body.message;
     const done = req.body.done;
 
-    const data = await client.query("UPDATE ticket SET message = $2, done = $3 WHERE id = $1", [id,message, done]);
+    const data = await client.query("UPDATE ticket SET message = $2, done = $3 WHERE id = $1 RETURNING*", [id,message, done]);
     
 
     if (data.rowCount === 1) {
