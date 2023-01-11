@@ -147,7 +147,7 @@ app.post("/api/ticket", async (req, res) => {
             data:{ post: data.rows} ,
             status: "fail",
         });
-    }n
+    }
 });
 
 /**
